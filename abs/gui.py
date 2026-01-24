@@ -5,9 +5,13 @@ import sys
 import tkinter as tk
 from tkinter import ttk
 import tkinter.messagebox as messagebox
+import tkinter.simpledialog as simpledialog
 from pprint import pformat
 from typing import Optional
 from .saveload import save_project, load_project as sl_load_project
+from .core import Game as CoreGame, Entity, Scene
+import threading
+
 class Engine:
     root: tk.Tk
     abs_section: tk.LabelFrame
@@ -80,6 +84,13 @@ class Engine:
 
         self.delete_entity_button = ttk.Button(
             self.entities_section,
+            text="Rename Entity",
+            command=self.rename_entity
+        )
+        self.delete_entity_button.pack(padx=5, pady=5)
+
+        self.delete_entity_button = ttk.Button(
+            self.entities_section,
             text="Delete Entity",
             command=self.delete_entity
         )
@@ -101,6 +112,9 @@ class Engine:
         self.abs_section = tk.LabelFrame(self.root, width=200, height=200, text="ABS")
         self.abs_section.pack(fill="both", padx=5, pady=5)
 
+        self.run_button = ttk.Button(self.abs_section, text='Run', command=self.run_game, width=25)
+        self.run_button.pack(padx=5, pady=5)
+
         self.exit_button = ttk.Button(self.abs_section, text='Exit', command=self.quit, width=25)
         self.exit_button.pack(padx=5, pady=5)
     
@@ -118,6 +132,27 @@ class Engine:
 
         del self.entities[selected_item]
         self.entity_list.delete(self.entity_list.curselection()[0])
+
+    def rename_entity(self) -> None:
+        try:
+            raw_selected_item = self.entity_list.curselection()[0]
+            selected_item = self.entity_list.get(raw_selected_item)
+        except IndexError:
+            messagebox.showerror("Error", "No entity selected.")
+            return
+
+        new_name = simpledialog.askstring("Rename Entity", "Enter new entity name:", initialvalue=selected_item)
+
+        if new_name is None:
+            return
+
+        if new_name.strip() == '':
+            messagebox.showerror("Error", "Entity name cannot be empty.")
+            return
+
+        self.entities[new_name] = self.entities.pop(selected_item)
+        self.entity_list.delete(raw_selected_item)
+        self.entity_list.insert(tk.END, new_name)
 
     def add_entity(self, name: str) -> None:
         if name.strip() == '':
@@ -197,6 +232,26 @@ class Engine:
     def save_name(self, name: str) -> None:
         self.project_name = name
         messagebox.showinfo("Info", f"Project name set to: {self.project_name}")
+
+    def run_game(self) -> None:
+        self.core_game = CoreGame(title=self.project_name)
+
+        for entity_name, entity_data in self.entities.items():
+            entity = Entity(
+                x=entity_data.get("x", 0),
+                y=entity_data.get("y", 0),
+                width=entity_data.get("width", 50),
+                height=entity_data.get("height", 50),
+                color=tuple(entity_data.get("color", (255, 255, 255))),
+                scriptfile=entity_data.get("scriptfile", None)
+            )
+            self.core_game.scene.add(entity)
+        self.game_loop()
+
+    def game_loop(self) -> None:
+        def run_core_game():
+            self.core_game.run()  # Assumes CoreGame has its own loop and window
+        threading.Thread(target=run_core_game, daemon=True).start()
 
     def run(self) -> None:
         self.root.mainloop()
