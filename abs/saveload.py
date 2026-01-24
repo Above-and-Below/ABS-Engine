@@ -1,3 +1,6 @@
+# Copyright (C) Above and Below Studios
+# See the LICENSE file for GPLv3
+
 from tkinter import messagebox as messagebox
 from tkinter import filedialog as filedialog
 from json import dump, load

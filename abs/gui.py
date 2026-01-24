@@ -1,3 +1,6 @@
+# Copyright (C) Above and Below Studios
+# See the LICENSE file for GPLv3
+
 import sys
 import tkinter as tk
 from tkinter import ttk
