@@ -22,6 +22,8 @@ class Entity:
             except ModuleNotFoundError:
                 messagebox.showerror("Error", f"Script file '{scriptfile}' not found.")
                 pygame.quit()
+            if hasattr(self.scriptfile_module, 'init'):
+                self.scriptfile_module.init(self)
 
     def update(self, dt):
         if self.scriptfile is not None and hasattr(self.scriptfile_module, 'update'):
