@@ -8,8 +8,8 @@ import tkinter.messagebox as messagebox
 import tkinter.simpledialog as simpledialog
 from pprint import pformat
 from typing import Optional
-from .saveload import save_project, load_project as sl_load_project
-from .core import Game as CoreGame, Entity, Scene
+from .saveload import save_project, load_project as sl_load_project, resource_path
+from .core import Game as CoreGame, Entity
 import threading
 
 
@@ -33,7 +33,7 @@ class Engine:
         self.root = tk.Tk()
         self.root.title("ABS Engine")
         self.root.geometry("450x600")
-        self.root.iconphoto(True, tk.PhotoImage(file="assets/icon.png"))
+        self.root.iconphoto(True, tk.PhotoImage(file=resource_path("assets/icon.png")))
         self.root.resizable(False, False)
 
         self.project_section = tk.LabelFrame(self.root, width=200, height=100, text="Project")

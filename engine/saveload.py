@@ -5,6 +5,13 @@ from tkinter import messagebox as messagebox
 from tkinter import filedialog as filedialog
 from json import dump, load
 from typing import Optional, Any
+import sys
+import os
+
+def resource_path(relative):
+    if hasattr(sys, "_MEIPASS"):
+        return os.path.join(sys._MEIPASS, relative) # pyright: ignore[reportAttributeAccessIssue]
+    return os.path.join(os.path.abspath("."), relative)
 
 
 def save_project(engine: Any) -> None:
