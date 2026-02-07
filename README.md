@@ -1,6 +1,6 @@
 # ABS-Engine
 
-ABS-Engine is a game engine developed by Above and Below, designed for public use. It provides tools and features to help you create games efficiently.
+ABS-Engine is a game engine developed by Above and Below Studios, designed for public use. It provides tools and features to help you create games efficiently.
 
 ## Features
 
@@ -16,8 +16,6 @@ ABS-Engine is a game engine developed by Above and Below, designed for public us
     ```bash
     git clone https://github.com/Above-and-Below/ABS-Engine.git
     ```
-
-2. Follow the setup instructions in the documentation.
 
 ## Contributing
 
